@@ -113,7 +113,14 @@ function validHabits(data) {
 }
 
 async function serveStatic(pathname, response) {
-  const requested = pathname === '/' ? '/index.html' : decodeURIComponent(pathname);
+  let requested;
+  try {
+    requested = pathname === '/' ? '/index.html' : decodeURIComponent(pathname);
+  } catch {
+    response.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    response.end('Invalid path');
+    return;
+  }
   const filePath = path.resolve(PUBLIC_DIR, `.${requested}`);
   if (!filePath.startsWith(`${PUBLIC_DIR}${path.sep}`)) {
     response.writeHead(403).end('Forbidden');
@@ -130,7 +137,14 @@ async function serveStatic(pathname, response) {
 }
 
 const server = http.createServer(async (request, response) => {
-  const pathname = new URL(request.url, `http://${request.headers.host || 'localhost'}`).pathname;
+  let pathname;
+  try {
+    pathname = new URL(request.url, 'http://localhost').pathname;
+  } catch {
+    response.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+    response.end('Invalid request URL');
+    return;
+  }
   if (pathname === '/api/health' && request.method === 'GET') {
     sendJson(response, 200, { status: 'ok', uptimeSeconds: Math.floor(process.uptime()) });
     return;
