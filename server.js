@@ -29,7 +29,7 @@ async function readHabits() {
 async function writeHabits(data) {
   await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
   const temporaryFile = `${DATA_FILE}.tmp`;
-  await fs.writeFile(temporaryFile, `${JSON.stringify(data, null, 2)}\\n`, 'utf8');
+  await fs.writeFile(temporaryFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
   await fs.rename(temporaryFile, DATA_FILE);
 }
 
