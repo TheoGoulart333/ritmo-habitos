@@ -29,7 +29,7 @@ async function readHabits() {
 async function writeHabits(data) {
   await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
   const temporaryFile = `${DATA_FILE}.tmp`;
-  await fs.writeFile(temporaryFile, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+  await fs.writeFile(temporaryFile, `${JSON.stringify(data, null, 2)}\\n`, 'utf8');
   await fs.rename(temporaryFile, DATA_FILE);
 }
 
@@ -56,15 +56,38 @@ function readRequestBody(request) {
   });
 }
 
+function isValidDateKey(value) {
+  const match = typeof value === 'string' && /^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(value);
+  if (!match) return false;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  if (month < 1 || month > 12 || day < 1) return false;
+
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  return day <= daysInMonth[month - 1];
+}
+
 function validHabits(data) {
-  return data && Array.isArray(data.habits) && data.habits.length <= 200 && data.habits.every(habit =>
-    habit && typeof habit.id === 'string' && habit.id.length <= 100 &&
-    typeof habit.name === 'string' && habit.name.trim().length > 0 && habit.name.length <= 40 &&
-    typeof habit.icon === 'string' && habit.icon.length <= 8 &&
-    typeof habit.color === 'string' && /^#[0-9a-f]{6}$/i.test(habit.color) &&
-    Array.isArray(habit.checks) && habit.checks.length <= 5000 &&
-    habit.checks.every(date => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date))
-  );
+  if (!data || !Array.isArray(data.habits) || data.habits.length > 200) return false;
+
+  const ids = new Set();
+  return data.habits.every(habit => {
+    if (!habit || typeof habit.id !== 'string' || !habit.id.trim() || habit.id.length > 100 ||
+        ids.has(habit.id) ||
+        typeof habit.name !== 'string' || habit.name.trim().length === 0 || habit.name.length > 40 ||
+        typeof habit.icon !== 'string' || habit.icon.length > 8 ||
+        typeof habit.color !== 'string' || !/^#[0-9a-f]{6}$/i.test(habit.color) ||
+        !Array.isArray(habit.checks) || habit.checks.length > 5000 ||
+        !habit.checks.every(isValidDateKey) ||
+        new Set(habit.checks).size !== habit.checks.length) {
+      return false;
+    }
+    ids.add(habit.id);
+    return true;
+  });
 }
 
 async function serveStatic(pathname, response) {
