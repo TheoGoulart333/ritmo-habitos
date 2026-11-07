@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f2">
+  <meta name="description" content="Acompanhe seus hábitos, um dia de cada vez.">
+  <title>Ritmo — hábitos no seu tempo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#inicio" aria-label="Ritmo, início"><span class="brand-mark">r.</span><span>ritmo</span></a>
+      <div class="side-label">PESSOAL</div>
+      <nav aria-label="Navegação principal">
+        <a class="nav-link active" href="#inicio"><span class="nav-icon">◫</span>Visão geral</a>
+        <a class="nav-link" href="#habitos"><span class="nav-icon">◉</span>Meus hábitos</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <p>Um pouco de cada vez já conta.</p>
+        <span>Seu espaço de hábitos</span>
+        <div class="profile"><div class="avatar">V</div><div><strong>Meu espaço</strong><small>Plano pessoal</small></div><span class="dots">···</span></div>
+      </div>
+    </aside>
+
+    <main id="inicio" class="main-content">
+      <header class="topbar"><div class="mobile-brand"><span class="brand-mark">r.</span> ritmo</div><div class="topbar-note">Acompanhe sua semana</div><button class="icon-button" id="todayButton" aria-label="Ir para hoje" title="Ir para hoje">Hoje</button></header>
+      <section class="welcome"><div class="eyebrow"><span class="eyebrow-line"></span> SEUS HÁBITOS</div><h1>Um dia de cada vez<span class="period">.</span></h1><p class="welcome-copy">Marque o que fez e acompanhe seu progresso ao longo da semana.</p></section>
+
+      <section class="week-card" aria-labelledby="week-title">
+        <div class="week-heading"><div><div class="section-kicker">SEU PROGRESSO</div><h2 id="week-title">Esta semana</h2></div><div class="week-controls"><button id="prevWeek" class="arrow-button" aria-label="Semana anterior">←</button><span id="weekLabel" class="week-range"></span><button id="nextWeek" class="arrow-button" aria-label="Próxima semana">→</button></div></div>
+        <div class="week-grid" id="weekGrid" aria-label="Progresso diário da semana"></div>
+        <div class="week-footer"><span><span class="legend-dot"></span> hábito concluído</span><span id="weekSummary"></span></div>
+      </section>
+
+      <section id="habitos" class="habits-section">
+        <div class="section-heading"><div><div class="section-kicker">SEU DIA A DIA</div><h2>Seus hábitos <span id="habitCount" class="count-pill">0</span></h2></div><button id="addHabitButton" class="primary-button"><span>＋</span> Novo hábito</button></div>
+        <div id="habitsList" class="habits-list"></div>
+      </section>
+      <footer class="footer-note">Ritmo · seus hábitos, sua rotina</footer>
+    </main>
+    <aside class="right-rail"><div class="date-card"><div class="date-top"><span>HOJE</span></div><div id="todayDate" class="today-date"></div><div id="todayWeekday" class="today-weekday"></div><div class="date-divider"></div><div class="daily-progress"><div class="progress-heading"><span>Seu progresso</span><strong id="progressPercent">0%</strong></div><div class="progress-track"><span id="progressBar"></span></div><p id="progressCopy">Nenhum hábito para hoje.</p></div><div class="mini-motivation"><p>Marque os hábitos que você concluiu hoje.</p></div></div>
+      <div class="tip-card"><div class="tip-label">DICA</div><p>Escolha uma meta que caiba na sua rotina.</p></div>
+    </aside>
+  </div>
+
+  <dialog id="habitDialog" class="habit-dialog"><form id="habitForm" method="dialog"><button type="button" class="close-button" id="closeDialog" aria-label="Fechar">×</button><div class="section-kicker">NOVO HÁBITO</div><h2 id="dialogTitle">Adicionar hábito</h2><p class="dialog-copy">Defina um hábito que você quer acompanhar.</p><label for="habitName">Nome do hábito</label><input id="habitName" name="name" maxlength="40" placeholder="Ex.: Ler por 10 minutos" required autocomplete="off"><label>Escolha um símbolo</label><div class="icon-picker" id="iconPicker"></div><label for="habitColor">Cor</label><div class="color-picker" id="colorPicker"></div><div class="dialog-actions"><button type="button" id="cancelDialog" class="secondary-button">Cancelar</button><button type="submit" class="primary-button">Salvar hábito</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
