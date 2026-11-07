@@ -1,0 +1,12 @@
+{
+  "name": "ritmo-habitos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Um app simples para acompanhar hábitos e o progresso da semana.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
