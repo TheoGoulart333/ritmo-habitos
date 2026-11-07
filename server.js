@@ -109,6 +109,10 @@ async function serveStatic(pathname, response) {
 
 const server = http.createServer(async (request, response) => {
   const pathname = new URL(request.url, `http://${request.headers.host || 'localhost'}`).pathname;
+  if (pathname === '/api/health' && request.method === 'GET') {
+    sendJson(response, 200, { status: 'ok', uptimeSeconds: Math.floor(process.uptime()) });
+    return;
+  }
   if (pathname === '/api/habits' && request.method === 'GET') {
     try { sendJson(response, 200, await readHabits()); }
     catch (error) { console.error(error); sendJson(response, 500, { error: 'Não foi possível ler os hábitos.' }); }

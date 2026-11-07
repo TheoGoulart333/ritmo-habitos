@@ -45,6 +45,15 @@ O projeto usa HTML, CSS e JavaScript no navegador, sem frameworks. O backend foi
 
 - `GET /api/habits` para carregar os hábitos.
 - `PUT /api/habits` para salvar os hábitos.
+- `GET /api/health` para conferir se a API está respondendo. A rota informa o tempo de atividade do processo e pode ser usada em verificações simples de disponibilidade.
+
+Para consultar a saúde da API com o servidor em execução:
+
+```bash
+curl http://127.0.0.1:3000/api/health
+```
+
+A resposta inclui `status: "ok"` e `uptimeSeconds`. Essa verificação confirma que o processo está respondendo; ela não valida integridade do arquivo de dados nem disponibilidade de serviços externos.
 
 A API também valida os dados recebidos: as datas precisam existir no calendário, os IDs devem ser únicos e um mesmo hábito não pode ter o mesmo dia marcado duas vezes. Isso evita salvar um histórico inconsistente.
 
