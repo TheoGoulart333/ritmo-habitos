@@ -4,6 +4,7 @@ const path = require('node:path');
 
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
+const MAX_REQUEST_BODY_BYTES = 256_000;
 const DATA_FILE = path.join(__dirname, 'data', 'habits.json');
 const PUBLIC_DIR = __dirname;
 const MIME_TYPES = {
@@ -40,19 +41,40 @@ function sendJson(response, status, data) {
 
 function readRequestBody(request) {
   return new Promise((resolve, reject) => {
-    let body = '';
+    const chunks = [];
+    let receivedBytes = 0;
+    let settled = false;
+
+    const fail = error => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
+
     request.on('data', chunk => {
-      body += chunk;
-      if (body.length > 256_000) {
-        reject(Object.assign(new Error('Request body too large'), { status: 413 }));
-        request.destroy();
+      if (settled) return;
+      receivedBytes += chunk.length;
+      if (receivedBytes > MAX_REQUEST_BODY_BYTES) {
+        chunks.length = 0;
+        fail(Object.assign(new Error('Request body too large'), { status: 413 }));
+        return;
+      }
+      chunks.push(chunk);
+    });
+
+    request.on('end', () => {
+      if (settled) return;
+      try {
+        const body = Buffer.concat(chunks).toString('utf8');
+        const data = JSON.parse(body);
+        settled = true;
+        resolve(data);
+      } catch {
+        fail(Object.assign(new Error('Invalid JSON'), { status: 400 }));
       }
     });
-    request.on('end', () => {
-      try { resolve(JSON.parse(body)); }
-      catch { reject(Object.assign(new Error('Invalid JSON'), { status: 400 })); }
-    });
-    request.on('error', reject);
+
+    request.on('error', fail);
   });
 }
 
