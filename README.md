@@ -11,6 +11,20 @@ Um projeto pessoal para acompanhar hábitos sem transformar a rotina em uma list
 - Guardar os dados em um arquivo JSON por meio de uma API local.
 - Usar a interface em computadores e celulares.
 
+## Capturas de tela
+
+### Visão geral
+
+![Visão geral do Ritmo](screenshots/ritmo-visao-geral.png)
+
+### Semana com hábitos marcados
+
+![Progresso semanal no Ritmo](screenshots/ritmo-progresso-semanal.png)
+
+### Adicionando um hábito
+
+![Janela para adicionar um hábito](screenshots/ritmo-novo-habito.png)
+
 ## Como rodar
 
 Você precisa do [Node.js](https://nodejs.org/) 18 ou mais recente. Clone o repositório, entre na pasta do projeto e inicie o servidor:
