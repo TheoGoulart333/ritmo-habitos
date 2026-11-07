@@ -46,6 +46,8 @@ O projeto usa HTML, CSS e JavaScript no navegador, sem frameworks. O backend foi
 - `GET /api/habits` para carregar os hábitos.
 - `PUT /api/habits` para salvar os hábitos.
 
+A API também valida os dados recebidos: as datas precisam existir no calendário, os IDs devem ser únicos e um mesmo hábito não pode ter o mesmo dia marcado duas vezes. Isso evita salvar um histórico inconsistente.
+
 Os dados ficam em `data/habits.json`, um arquivo local que não deve ser enviado ao GitHub. Se o servidor não estiver disponível, a interface ainda consegue guardar dados no armazenamento local do navegador.
 
 ## Tecnologias
